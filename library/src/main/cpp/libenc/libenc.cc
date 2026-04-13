@@ -1,7 +1,7 @@
 #include <jni.h>
 #include <string.h>
 #include <libyuv.h>
-#include <x264.h>
+//#include <x264.h>
 
 #include <android/log.h>
 
@@ -23,6 +23,7 @@ struct YuvFrame {
     uint8_t *v;
 };
 
+#if 0
 typedef struct x264_context {
     // encode parameter
     x264_param_t params;
@@ -41,11 +42,12 @@ typedef struct x264_context {
     int dts;
     bool is_key_frame;
 } x264_context;
+#endif
 
 static JavaVM *jvm;
 static JNIEnv *jenv;
 
-static struct x264_context x264_ctx;
+//static struct x264_context x264_ctx;
 static uint8_t h264_es[1024 * 1024];
 
 static const int SRC_COLOR_FMT = FOURCC_RGBA;
@@ -175,6 +177,7 @@ static bool convert_to_i420_with_crop_scale(uint8_t *src_frame, jint src_width, 
     return true;
 }
 
+#if 0
 static void libenc_setEncoderBitrate(JNIEnv *env, jobject thiz, jint bitrate) {
     x264_ctx.bitrate = bitrate / 1024;  // kbps
 }
@@ -192,6 +195,7 @@ static void libenc_setEncoderPreset(JNIEnv *env, jobject thiz, jstring preset) {
     strcpy(x264_ctx.preset, enc_preset);
     env->ReleaseStringUTFChars(preset, enc_preset);
 }
+#endif
 
 static void
 libenc_setEncoderResolution(JNIEnv *env, jobject thiz, jint out_width, jint out_height) {
@@ -217,8 +221,8 @@ libenc_setEncoderResolution(JNIEnv *env, jobject thiz, jint out_width, jint out_
         nv12_frame.v = nv12_frame.u + y_size / 4;
     }
 
-    x264_ctx.width = out_width;
-    x264_ctx.height = out_height;
+    //x264_ctx.width = out_width;
+    //x264_ctx.height = out_height;
 }
 
 // For COLOR_FormatYUV420Planar
@@ -419,6 +423,7 @@ libenc_ARGBToNV12Scaled(JNIEnv *env, jobject thiz, jintArray frame, jint src_wid
     return nv12Frame;
 }
 
+#if 0
 static int encode_nals(const x264_nal_t *nals, int nnal) {
     int i;
     uint8_t *p = h264_es;
@@ -548,13 +553,14 @@ static jboolean libenc_openSoftEncoder(JNIEnv *env, jobject thiz) {
 
     return JNI_TRUE;
 }
+#endif
 
 static JNINativeMethod libenc_methods[] = {
         {"setEncoderResolution", "(II)V",                 (void *) libenc_setEncoderResolution},
-        {"setEncoderFps",        "(I)V",                  (void *) libenc_setEncoderFps},
-        {"setEncoderGop",        "(I)V",                  (void *) libenc_setEncoderGop},
-        {"setEncoderBitrate",    "(I)V",                  (void *) libenc_setEncoderBitrate},
-        {"setEncoderPreset",     "(Ljava/lang/String;)V", (void *) libenc_setEncoderPreset},
+        //{"setEncoderFps",        "(I)V",                  (void *) libenc_setEncoderFps},
+        //{"setEncoderGop",        "(I)V",                  (void *) libenc_setEncoderGop},
+        //{"setEncoderBitrate",    "(I)V",                  (void *) libenc_setEncoderBitrate},
+        //{"setEncoderPreset",     "(Ljava/lang/String;)V", (void *) libenc_setEncoderPreset},
         {"RGBAToI420",           "([BIIZI)[B",            (void *) libenc_RGBAToI420},
         {"RGBAToNV12",           "([BIIZI)[B",            (void *) libenc_RGBAToNV12},
         {"ARGBToI420Scaled",     "([IIIZIIIII)[B",        (void *) libenc_ARGBToI420Scaled},
@@ -563,9 +569,9 @@ static JNINativeMethod libenc_methods[] = {
         {"ARGBToNV12",           "([IIIZI)[B",            (void *) libenc_ARGBToNV12},
         {"NV21ToNV12Scaled",     "([BIIZIIIII)[B",        (void *) libenc_NV21ToNV12Scaled},
         {"NV21ToI420Scaled",     "([BIIZIIIII)[B",        (void *) libenc_NV21ToI420Scaled},
-        {"openSoftEncoder",      "()Z",                   (void *) libenc_openSoftEncoder},
-        {"closeSoftEncoder",     "()V",                   (void *) libenc_closeSoftEncoder},
-        {"RGBASoftEncode",       "([BIIZIJ)I",            (void *) libenc_RGBASoftEncode},
+        //{"openSoftEncoder",      "()Z",                   (void *) libenc_openSoftEncoder},
+        //{"closeSoftEncoder",     "()V",                   (void *) libenc_closeSoftEncoder},
+        //{"RGBASoftEncode",       "([BIIZIJ)I",            (void *) libenc_RGBASoftEncode},
 };
 
 jint JNI_OnLoad(JavaVM *vm, void *reserved) {

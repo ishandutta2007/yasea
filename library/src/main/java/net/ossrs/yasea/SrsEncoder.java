@@ -104,22 +104,22 @@ public class SrsEncoder {
         }
 
         setEncoderResolution(vOutWidth, vOutHeight);
-        setEncoderFps(VFPS);
-        setEncoderGop(VGOP);
+        //setEncoderFps(VFPS);
+        //setEncoderGop(VGOP);
         // Unfortunately for some android phone, the output fps is less than 10 limited by the
         // capacity of poor cheap chips even with x264. So for the sake of quick appearance of
         // the first picture on the player, a spare lower GOP value is suggested. But note that
         // lower GOP will produce more I frames and therefore more streaming data flow.
         // setEncoderGop(15);
-        setEncoderBitrate(vBitrate);
-        setEncoderPreset(x264Preset);
+        //setEncoderBitrate(vBitrate);
+        //setEncoderPreset(x264Preset);
 
-        if (useSoftEncoder) {
-            canSoftEncode = openSoftEncoder();
-            if (!canSoftEncode) {
-                return false;
-            }
-        }
+        //if (useSoftEncoder) {
+        //    canSoftEncode = openSoftEncoder();
+        //    if (!canSoftEncode) {
+        //        return false;
+        //    }
+        //}
 
         // aencoder pcm to aac raw stream.
         // requires sdk level 16+, Android 4.1, 4.1.1, the JELLY_BEAN
@@ -180,10 +180,10 @@ public class SrsEncoder {
         mPausetime = 0;
     }
     public void stop() {
-        if (useSoftEncoder) {
-            closeSoftEncoder();
-            canSoftEncode = false;
-        }
+        //if (useSoftEncoder) {
+        //    closeSoftEncoder();
+        //    canSoftEncode = false;
+        //}
 
         if (aencoder != null) {
             Log.i(TAG, "stop aencoder");
@@ -553,7 +553,7 @@ public class SrsEncoder {
     }
 
     private void swRgbaFrame(byte[] data, int width, int height, long pts) {
-        RGBASoftEncode(data, width, height, true, 180, pts);
+        //RGBASoftEncode(data, width, height, true, 180, pts);
     }
 
     @SuppressLint("MissingPermission")
@@ -643,10 +643,10 @@ public class SrsEncoder {
     }
 
     private native void setEncoderResolution(int outWidth, int outHeight);
-    private native void setEncoderFps(int fps);
-    private native void setEncoderGop(int gop);
-    private native void setEncoderBitrate(int bitrate);
-    private native void setEncoderPreset(String preset);
+    //private native void setEncoderFps(int fps);
+    //private native void setEncoderGop(int gop);
+    //private native void setEncoderBitrate(int bitrate);
+    //private native void setEncoderPreset(String preset);
     private native byte[] RGBAToI420(byte[] frame, int width, int height, boolean flip, int rotate);
     private native byte[] RGBAToNV12(byte[] frame, int width, int height, boolean flip, int rotate);
     private native byte[] ARGBToI420Scaled(int[] frame, int width, int height, boolean flip, int rotate, int crop_x, int crop_y,int crop_width, int crop_height);
@@ -655,9 +655,9 @@ public class SrsEncoder {
     private native byte[] ARGBToNV12(int[] frame, int width, int height, boolean flip, int rotate);
     private native byte[] NV21ToNV12Scaled(byte[] frame, int width, int height, boolean flip, int rotate, int crop_x, int crop_y,int crop_width, int crop_height);
     private native byte[] NV21ToI420Scaled(byte[] frame, int width, int height, boolean flip, int rotate, int crop_x, int crop_y,int crop_width, int crop_height);
-    private native int RGBASoftEncode(byte[] frame, int width, int height, boolean flip, int rotate, long pts);
-    private native boolean openSoftEncoder();
-    private native void closeSoftEncoder();
+    //private native int RGBASoftEncode(byte[] frame, int width, int height, boolean flip, int rotate, long pts);
+    //private native boolean openSoftEncoder();
+    //private native void closeSoftEncoder();
 
     static {
         System.loadLibrary("yuv");
